@@ -15,6 +15,9 @@
  */
 package com.abahgat.suffixtree;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,13 +47,22 @@ public class EdgeBagTest {
     }
 
 
+
+    private static List<Character> mL(String s) {
+        ArrayList<Character> characterArrayList = new ArrayList<Character>();
+        for (char ch : s.toCharArray())
+        {
+            characterArrayList.add(ch);
+        }
+        return characterArrayList;
+    }
      @Test
      public void testPut() {
-        EdgeBag bag = new EdgeBag();
-        Edge e1 = new Edge("asd", null);
-        Edge e2 = new Edge("errimo", null);
-        Edge e3 = new Edge("foo", null);
-        Edge e4 = new Edge("bar", null);
+        EdgeBag<Character> bag = new EdgeBag<Character>();
+        Edge<Character> e1 = new Edge<Character>(mL("asd"), null);
+        Edge<Character> e2 = new Edge<Character>(mL("errimo"), null);
+        Edge<Character> e3 = new Edge<Character>(mL("foo"), null);
+        Edge<Character> e4 = new Edge<Character>(mL("bar"), null);
         bag.put('a', e1);
         bag.put('e', e2);
         bag.put('f', e3);

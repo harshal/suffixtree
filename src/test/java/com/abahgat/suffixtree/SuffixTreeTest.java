@@ -15,29 +15,54 @@
  */
 package com.abahgat.suffixtree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+
 import junit.framework.TestCase;
 import static com.abahgat.suffixtree.Utils.getSubstrings;
 
 public class SuffixTreeTest extends TestCase {
 
+    private static List<Character> mL(String s) {
+        ArrayList<Character> characterArrayList = new ArrayList<Character>();
+        for (char ch : s.toCharArray())
+        {
+            characterArrayList.add(ch);
+        }
+        return characterArrayList;
+    }
+
+    private static class CharSuffTree extends GeneralizedSuffixTree<Character>
+    {
+        public Collection<Integer> search(String str)
+        {
+            return search(mL(str));
+        }
+
+        public void put(String str, int index )
+        {
+            super.put(mL(str), index);
+        }
+    }
+
     public void testBasicTreeGeneration() {
-        GeneralizedSuffixTree in = new GeneralizedSuffixTree();
+        CharSuffTree in = new CharSuffTree();
 
         String word = "cacao";
-        in.put(word, 0);
+        in.put(mL(word), 0);
 
         /* test that every substring is contained within the tree */
         for (String s : getSubstrings(word)) {
-            assertTrue(in.search(s).contains(0));
+            assertTrue(in.search(mL(s)).contains(0));
         }
         assertNull(in.search("caco"));
         assertNull(in.search("cacaoo"));
         assertNull(in.search("ccacao"));
 
-        in = new GeneralizedSuffixTree();
+        in = new CharSuffTree();
         word = "bookkeeper";
         in.put(word, 0);
         for (String s : getSubstrings(word)) {
@@ -49,7 +74,7 @@ public class SuffixTreeTest extends TestCase {
     }
 
     public void testWeirdword() {
-        GeneralizedSuffixTree in = new GeneralizedSuffixTree();
+        CharSuffTree in = new CharSuffTree();
 
         String word = "cacacato";
         in.put(word, 0);
@@ -62,7 +87,7 @@ public class SuffixTreeTest extends TestCase {
 
     public void testDouble() {
         // test whether the tree can handle repetitions
-        GeneralizedSuffixTree in = new GeneralizedSuffixTree();
+        CharSuffTree in = new CharSuffTree();
         String word = "cacao";
         in.put(word, 0);
         in.put(word, 1);
@@ -74,7 +99,7 @@ public class SuffixTreeTest extends TestCase {
     }
 
     public void testBananaAddition() {
-        GeneralizedSuffixTree in = new GeneralizedSuffixTree();
+        CharSuffTree in = new CharSuffTree();
         String[] words = new String[] {"banana", "bano", "ba"};
         for (int i = 0; i < words.length; ++i) {
             in.put(words[i], i);
@@ -106,7 +131,7 @@ public class SuffixTreeTest extends TestCase {
     }
 
     public void testAddition() {
-        GeneralizedSuffixTree in = new GeneralizedSuffixTree();
+        CharSuffTree in = new CharSuffTree();
         String[] words = new String[] {"cacaor" , "caricato", "cacato", "cacata", "caricata", "cacao", "banana"};
         for (int i = 0; i < words.length; ++i) {
             in.put(words[i], i);
@@ -142,7 +167,7 @@ public class SuffixTreeTest extends TestCase {
     }
 
     public void testSampleAddition() {
-        GeneralizedSuffixTree in = new GeneralizedSuffixTree();
+        CharSuffTree in = new CharSuffTree();
         String[] words = new String[] {"libertypike",
             "franklintn",
             "carothersjohnhenryhouse",

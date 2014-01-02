@@ -15,19 +15,21 @@
  */
 package com.abahgat.suffixtree;
 
+import java.util.List;
+
 /**
  * Represents an Edge in the Suffix Tree.
  * It has a label and a destination Node
  */
-class Edge {
-    private String label;
+class Edge<T> {
+    private List<T> label;
     private Node dest;
 
-    public String getLabel() {
+    public List<T> getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(List<T> label) {
         this.label = label;
     }
 
@@ -39,7 +41,7 @@ class Edge {
         this.dest = dest;
     }
 
-    public Edge(String label, Node dest) {
+    public Edge(List<T> label, Node dest) {
         this.label = label;
         this.dest = dest;
     }

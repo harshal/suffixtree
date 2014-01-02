@@ -23,7 +23,7 @@ import java.util.Set;
  * Represents a node of the generalized suffix tree graph
  * @see GeneralizedSuffixTree
  */
-class Node {
+class Node<T extends Comparable<T>> {
 
     /**
      * The payload array used to store the data (indexes) associated with this node.
@@ -55,7 +55,7 @@ class Node {
     /**
      * The set of edges starting from this node
      */
-    private final EdgeBag edges;
+    private final EdgeBag<T> edges;
     /**
      * The suffix link as described in Ukkonen's paper.
      * if str is the string denoted by the path from the root to this, this.suffix
@@ -109,7 +109,8 @@ class Node {
         // need to get more matches from child nodes. This is what may waste time
         for (Edge e : edges.values()) {
             if (-1 == numElements || ret.size() < numElements) {
-                for (int num : e.getDest().getData()) {
+                Collection<Integer> s = e.getDest().getData();
+                for (int num : s) {
                     ret.add(num);
                     if (ret.size() == numElements) {
                         return ret;
@@ -188,7 +189,8 @@ class Node {
             ret.add(num);
         }
         for (Edge e : edges.values()) {
-            for (int num : e.getDest().computeAndCacheCountRecursive()) {
+            Set<Integer> s = e.getDest().computeAndCacheCountRecursive();
+            for (int num : s) {
                 ret.add(num);
             }
         }
@@ -216,11 +218,11 @@ class Node {
         return resultCount;
     }
 
-    void addEdge(char ch, Edge e) {
+    void addEdge(T ch, Edge e) {
         edges.put(ch, e);
     }
 
-    Edge getEdge(char ch) {
+    Edge getEdge(T ch) {
         return edges.get(ch);
     }
 

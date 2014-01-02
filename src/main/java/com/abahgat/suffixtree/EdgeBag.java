@@ -15,31 +15,40 @@
  */
 package com.abahgat.suffixtree;
 
-class EdgeBag {
-    private byte[] chars;
+import java.lang.reflect.Array;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+
+class EdgeBag<T extends Comparable> {
+    private T[] chars;
     private Edge[] values;
     private static final int BSEARCH_THRESHOLD = 6;
 
-    void put(char c, Edge e) {
-        if (c != (char) (byte) c) {
-            throw new IllegalArgumentException("Illegal input character " + c + ".");
+    private final Comparator<T> C = new Comparator<T>() {
+        public int compare(T one, T two)
+        {
+            return one.compareTo(two);
         }
-        
+    };
+
+    void put(T c, Edge e) {
         if (chars == null) {
-            chars = new byte[0];
+            chars = (T[]) Array.newInstance(c.getClass(), 0);
             values = new Edge[0];
         }
         int idx = search(c);
 
         if (idx < 0) {
             int currsize = chars.length;
-            byte[] copy = new byte[currsize + 1];
+            T[] copy = (T[]) Array.newInstance(c.getClass(), currsize + 1);
             System.arraycopy(chars, 0, copy, 0, currsize);
             chars = copy;
             Edge[] copy1 = new Edge[currsize + 1];
             System.arraycopy(values, 0, copy1, 0, currsize);
             values = copy1;
-            chars[currsize] = (byte) c;
+            chars[currsize] = c;
             values[currsize] = e;
             currsize++;
             if (currsize > BSEARCH_THRESHOLD) {
@@ -50,11 +59,8 @@ class EdgeBag {
         }
     }
 
-    Edge get(char c) {
-        if (c != (char) (byte) c) {
-            throw new IllegalArgumentException("Illegal input character " + c + ".");
-        }
-        
+    Edge get(T c) {
+
         int idx = search(c);
         if (idx < 0) {
             return null;
@@ -62,12 +68,12 @@ class EdgeBag {
         return values[idx];
     }
 
-    private int search(char c) {
+    private int search(T c) {
         if (chars == null)
             return -1;
         
         if (chars.length > BSEARCH_THRESHOLD) {
-            return java.util.Arrays.binarySearch(chars, (byte) c);
+            return java.util.Arrays.binarySearch(chars, c, C);
         }
 
         for (int i = 0; i < chars.length; i++) {
@@ -90,8 +96,8 @@ class EdgeBag {
     private void sortArrays() {
         for (int i = 0; i < chars.length; i++) {
          for (int j = i; j > 0; j--) {
-            if (chars[j-1] > chars[j]) {
-               byte swap = chars[j];
+            if (chars[j-1].compareTo(chars[j]) > 0) {
+               T swap = chars[j];
                chars[j] = chars[j-1];
                chars[j-1] = swap;
 
